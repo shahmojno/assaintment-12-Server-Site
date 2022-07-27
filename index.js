@@ -56,13 +56,12 @@ async function run() {
 
 
 
-
         app.get('/admin/:email', async (req, res) => {
             const email = req.params.email;
             const user = await userCollection.findOne({ email: email });
             const isAdmin = user.role === 'admin';
             res.send({ admin: isAdmin })
-        })
+        });
 
         app.put('/user/admin/:email', verifyJWT, async (req, res) => {
             const email = req.params.email;
@@ -108,24 +107,21 @@ async function run() {
         });
 
 
-
-
-
         app.get('/order', verifyJWT, async (req, res) => {
-            const name = req.query.name;
+            const userEmail = req.query.userEmail;
             const decodedEmail = req.decoded.email;
-            if (name === decodedEmail) {
-                const query = { name: name };
-                const product = await orderCollection.find(query).toArray();
+            if (userEmail === decodedEmail) {
+                const query = { userEmail: userEmail };
+                const order = await orderCollection.find(query).toArray();
                 return res.send(order);
             }
             else {
                 return res.status(403).send({ message: 'forbidden access' });
             }
             const authorization = req.headers.authorization;
+            console.log('auth header', authorization);
 
-
-        });
+        })
 
         app.post('/order', async (req, res) => {
             const order = req.body;
