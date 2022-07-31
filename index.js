@@ -39,6 +39,7 @@ async function run() {
         const productCollection = client.db('handtools').collection('tools');
         const orderCollection = client.db('handtools').collection('products');
         const userCollection = client.db('handtools').collection('users');
+        const profileCollection = client.db('handtools').collection('profile');
 
 
         //api
@@ -84,7 +85,6 @@ async function run() {
 
         });
 
-
         app.put('/user/:email', async (req, res) => {
             const email = req.params.email;
             const user = req.body;
@@ -97,6 +97,26 @@ async function run() {
             const token = jwt.sign({ email: email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' })
             res.send({ result, token });
         });
+
+
+
+
+        app.post('/profile/:email', verifyJWT, async (req, res) => {
+            const profile = req.body;
+            const query = { email: email }
+            console.log(query);
+            const exists = await profileCollection.findOne(query);
+            if (exists) {
+                return res.send({ success: false, profile: exists })
+            }
+            const result = await profileCollection.insertOne(profile);
+            return res.send({ success: true, result });
+
+
+        });
+
+
+
 
 
         app.get('/tools/:id', async (req, res) => {
