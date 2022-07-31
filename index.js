@@ -125,10 +125,6 @@ async function run() {
 
 
 
-
-
-
-
         app.get('/order', verifyJWT, async (req, res) => {
             const userEmail = req.query.userEmail;
             const decodedEmail = req.decoded.email;
