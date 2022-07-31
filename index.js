@@ -50,6 +50,10 @@ async function run() {
             res.send(products);
         });
 
+
+
+
+
         app.get('/user', verifyJWT, async (req, res) => {
             const users = await userCollection.find().toArray();
             res.send(users);
@@ -101,20 +105,13 @@ async function run() {
 
 
 
-        app.post('/profile/:email', verifyJWT, async (req, res) => {
+        app.post('/profile', async (req, res) => {
             const profile = req.body;
-            const query = { email: email }
-            console.log(query);
-            const exists = await profileCollection.findOne(query);
-            if (exists) {
-                return res.send({ success: false, profile: exists })
-            }
             const result = await profileCollection.insertOne(profile);
             return res.send({ success: true, result });
 
 
         });
-
 
 
 
@@ -125,6 +122,11 @@ async function run() {
             const product = await productCollection.findOne(query);
             res.send(product);
         });
+
+
+
+
+
 
 
         app.get('/order', verifyJWT, async (req, res) => {
